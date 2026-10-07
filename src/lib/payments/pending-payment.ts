@@ -11,10 +11,18 @@ export function savePendingPayment(payment: PendingPayment) {
   }
 }
 
-export function readPendingPayment(): PendingPayment | null {
+/** The raw stored string. Stable between reads, so it can back `useSyncExternalStore`. */
+export function pendingPaymentSnapshot(): string | null {
   try {
-    const raw = sessionStorage.getItem(STORAGE_KEY)
-    if (!raw) return null
+    return sessionStorage.getItem(STORAGE_KEY)
+  } catch {
+    return null
+  }
+}
+
+export function parsePendingPayment(raw: string | null): PendingPayment | null {
+  if (!raw) return null
+  try {
     const value = JSON.parse(raw) as Partial<PendingPayment>
     if (typeof value.paymentId !== "string" || typeof value.bookingId !== "string") return null
     return {
@@ -25,6 +33,10 @@ export function readPendingPayment(): PendingPayment | null {
   } catch {
     return null
   }
+}
+
+export function readPendingPayment(): PendingPayment | null {
+  return parsePendingPayment(pendingPaymentSnapshot())
 }
 
 export function clearPendingPayment() {

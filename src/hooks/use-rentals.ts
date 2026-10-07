@@ -54,12 +54,12 @@ export function useBooking(bookingId: string) {
   })
 }
 
-export function useMyPayments() {
+export function useMyPayments({ enabled = true }: { enabled?: boolean } = {}) {
   const { isReady } = useAuth()
   return useQuery({
     queryKey: queryKeys.payments.mine,
     queryFn: () => paymentsApi.mine(),
-    enabled: isReady,
+    enabled: isReady && enabled,
   })
 }
 
