@@ -65,19 +65,29 @@ export function useUpdateProperty(propertyId: string) {
   })
 }
 
+const propertyListKeys = [
+  ["properties", "mine"],
+  ["properties", "moderation"],
+] as const
+
 /** Status changes from list rows, applied optimistically to every cached page. */
 export function useSetPropertyStatus() {
   const queryClient = useQueryClient()
-  const listKey = ["properties", "mine"] as const
   return useMutation({
     mutationFn: ({ id, status }: { id: string; status: PropertyStatus }) =>
       propertiesApi.update(id, { status }),
     onMutate: async ({ id, status }) => {
-      await queryClient.cancelQueries({ queryKey: listKey })
-      const snapshot = queryClient.getQueriesData<Paginated<Property>>({ queryKey: listKey })
-      queryClient.setQueriesData<Paginated<Property>>({ queryKey: listKey }, (page) =>
-        page ? { ...page, data: page.data.map((p) => (p.id === id ? { ...p, status } : p)) } : page,
+      await Promise.all(propertyListKeys.map((queryKey) => queryClient.cancelQueries({ queryKey })))
+      const snapshot = propertyListKeys.flatMap((queryKey) =>
+        queryClient.getQueriesData<Paginated<Property>>({ queryKey }),
       )
+      for (const queryKey of propertyListKeys) {
+        queryClient.setQueriesData<Paginated<Property>>({ queryKey }, (page) =>
+          page
+            ? { ...page, data: page.data.map((p) => (p.id === id ? { ...p, status } : p)) }
+            : page,
+        )
+      }
       queryClient.setQueryData<PropertyDetail>(queryKeys.properties.detail(id), (detail) =>
         detail ? { ...detail, status } : detail,
       )

@@ -7,6 +7,7 @@ export const queryKeys = {
     all: ["properties"] as const,
     list: (params: QueryParams) => ["properties", "list", params] as const,
     mine: (params: QueryParams) => ["properties", "mine", params] as const,
+    moderation: (params: QueryParams) => ["properties", "moderation", params] as const,
     detail: (id: string) => ["properties", "detail", id] as const,
     rooms: (propertyId: string) => ["properties", "rooms", propertyId] as const,
   },
