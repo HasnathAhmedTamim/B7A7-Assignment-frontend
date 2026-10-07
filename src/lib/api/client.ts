@@ -91,7 +91,8 @@ export async function request<T>(
 
   if (useAuth && response.status === 403) {
     const error = await parse<T>(response.clone()).catch((e: unknown) => e)
-    if (error instanceof ApiError && /blocked/i.test(error.message)) {
+    // Only the backend's own-account message; other 403s (e.g. "Demo accounts cannot be blocked") must not sign the user out.
+    if (error instanceof ApiError && /^account is blocked\b/i.test(error.message.trim())) {
       handleSessionExpired("blocked")
     }
   }
