@@ -72,6 +72,18 @@ export function pluralize(count: number, singular: string, plural = `${singular}
   return `${count} ${count === 1 ? singular : plural}`
 }
 
+/** Joins address parts, skipping any already contained in an earlier part. */
+export function formatAddress(place: { address: string; location: string | null; city: string }) {
+  const parts: string[] = []
+  for (const part of [place.address, place.location, place.city]) {
+    const value = part?.trim()
+    if (!value) continue
+    if (parts.some((existing) => existing.toLowerCase().includes(value.toLowerCase()))) continue
+    parts.push(value)
+  }
+  return parts.join(", ")
+}
+
 export function shortId(id: string) {
   return id.slice(0, 8).toUpperCase()
 }
