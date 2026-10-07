@@ -3,6 +3,7 @@ import { Suspense } from "react"
 
 import { AuthFormSkeleton } from "@/components/auth/auth-form-skeleton"
 import { LoginForm } from "@/components/auth/login-form"
+import { RemountOnHide } from "@/components/shared/remount-on-hide"
 import { publicMetadata } from "@/lib/metadata"
 
 export const metadata: Metadata = publicMetadata({
@@ -14,7 +15,9 @@ export const metadata: Metadata = publicMetadata({
 export default function LoginPage() {
   return (
     <Suspense fallback={<AuthFormSkeleton />}>
-      <LoginForm />
+      <RemountOnHide>
+        <LoginForm />
+      </RemountOnHide>
     </Suspense>
   )
 }

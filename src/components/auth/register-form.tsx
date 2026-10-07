@@ -23,7 +23,6 @@ import {
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Spinner } from "@/components/ui/spinner"
 import { useRegister } from "@/hooks/use-auth"
-import { useResetOnHide } from "@/hooks/use-reset-on-hide"
 import { isApiError } from "@/lib/api/errors"
 import { applyServerErrors } from "@/lib/forms"
 import { registerSchema, type RegisterValues } from "@/lib/validation/auth"
@@ -85,12 +84,6 @@ export function RegisterForm() {
   })
 
   const busy = register.isPending || register.isSuccess
-
-  useResetOnHide(() => {
-    register.reset()
-    form.reset()
-    setFormError(null)
-  })
 
   return (
     <div className="space-y-6">

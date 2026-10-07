@@ -1,6 +1,7 @@
 import type { Metadata } from "next"
 
 import { RegisterForm } from "@/components/auth/register-form"
+import { RemountOnHide } from "@/components/shared/remount-on-hide"
 import { publicMetadata } from "@/lib/metadata"
 
 export const metadata: Metadata = publicMetadata({
@@ -10,5 +11,9 @@ export const metadata: Metadata = publicMetadata({
 })
 
 export default function RegisterPage() {
-  return <RegisterForm />
+  return (
+    <RemountOnHide>
+      <RegisterForm />
+    </RemountOnHide>
+  )
 }
