@@ -1,7 +1,7 @@
 "use client"
 
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useEffect } from "react"
+import { useEffect, useId } from "react"
 import { Controller, useForm } from "react-hook-form"
 import { z } from "zod"
 
@@ -68,6 +68,7 @@ const typeOptions: Array<{ value: PropertyType | typeof ANY; label: string }> = 
 
 export function FilterPanel({ onApplied }: { onApplied?: () => void }) {
   const { filters, update, reset, isPending } = useFilters()
+  const id = useId()
   const form = useForm<Values>({ resolver: zodResolver(schema), defaultValues: toValues(filters) })
 
   // Keep the form in sync when the URL changes from elsewhere (chips, back button, reset).
@@ -98,10 +99,10 @@ export function FilterPanel({ onApplied }: { onApplied?: () => void }) {
         <Field
           data-invalid={Boolean(form.formState.errors.minRent || form.formState.errors.maxRent)}
         >
-          <FieldLabel htmlFor="minRent">Monthly rent (BDT)</FieldLabel>
+          <FieldLabel htmlFor={`${id}-min-rent`}>Monthly rent (BDT)</FieldLabel>
           <div className="grid grid-cols-2 gap-2">
             <Input
-              id="minRent"
+              id={`${id}-min-rent`}
               inputMode="decimal"
               placeholder="Min"
               aria-label="Minimum rent"
@@ -146,11 +147,11 @@ export function FilterPanel({ onApplied }: { onApplied?: () => void }) {
           render={({ field }) => (
             <Field orientation="horizontal">
               <Checkbox
-                id="available"
+                id={`${id}-available`}
                 checked={field.value}
                 onCheckedChange={(checked) => field.onChange(checked === true)}
               />
-              <FieldLabel htmlFor="available" className="font-normal">
+              <FieldLabel htmlFor={`${id}-available`} className="font-normal">
                 Only homes with free rooms
               </FieldLabel>
             </Field>
