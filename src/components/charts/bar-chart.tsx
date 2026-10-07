@@ -35,6 +35,7 @@ export default function SimpleBarChart({
           tickLine={false}
           axisLine={false}
           width={56}
+          allowDecimals={false}
           tickFormatter={(value: number) => formatValue(value)}
         />
         <ChartTooltip
