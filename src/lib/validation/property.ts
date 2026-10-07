@@ -11,6 +11,10 @@ import {
 
 const MAX_RENT = 10_000_000
 
+/** Mirrors the backend's limits for property photos. */
+export const MAX_PROPERTY_PHOTOS = 8
+export const MAX_PHOTO_BYTES = 5 * 1024 * 1024
+
 function wholeNumber(label: string, min: number, max: number) {
   return z
     .string()

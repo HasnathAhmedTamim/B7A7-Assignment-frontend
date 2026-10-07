@@ -9,6 +9,7 @@ import type {
   PaymentWithBooking,
   Property,
   PropertyDetail,
+  PropertyImage,
   PropertyStatus,
   PropertyType,
   RentalRequest,
@@ -63,6 +64,21 @@ export const propertiesApi = {
   update: (propertyId: string, input: Partial<PropertyInput>) =>
     api.patch<Property>(`/properties/${id(propertyId)}`, input),
   remove: (propertyId: string) => api.delete<null>(`/properties/${id(propertyId)}`),
+  /** Returns all of the property's photos after the upload. */
+  uploadImages: (
+    propertyId: string,
+    files: File[],
+    onUploadProgress?: (percent: number) => void,
+  ) => {
+    const body = new FormData()
+    for (const file of files) body.append("images", file)
+    return api.post<PropertyImage[]>(`/properties/${id(propertyId)}/images`, body, {
+      onUploadProgress,
+    })
+  },
+  /** Returns the photos that remain. */
+  removeImage: (propertyId: string, imageId: string) =>
+    api.delete<PropertyImage[]>(`/properties/${id(propertyId)}/images/${id(imageId)}`),
 }
 
 export const roomsApi = {

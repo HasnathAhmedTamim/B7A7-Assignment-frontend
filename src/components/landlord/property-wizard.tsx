@@ -117,8 +117,8 @@ function WizardForm() {
             reset()
             toast.success(
               status === "PUBLISHED"
-                ? "Property published. Add rooms so renters can request them."
-                : "Draft saved. Add rooms, then publish when you're ready.",
+                ? "Property published. Add photos and rooms so renters can request them."
+                : "Draft saved. Add photos and rooms, then publish when you're ready.",
             )
             router.push(`/landlord/properties/${property.id}`)
           },

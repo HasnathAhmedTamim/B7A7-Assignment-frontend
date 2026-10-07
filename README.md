@@ -42,7 +42,7 @@ The login page has a one-click **Demo Login** button for each role. These are pu
 
 - Home page with the latest published listings, plus About, How it works, FAQ and Contact pages
 - Property browsing with search, city, area, rent range, property type, bedroom/bathroom and availability filters, sorting and pagination
-- Property detail page with rooms, rent and a rental request form
+- Listing cards with a cover photo, and a property detail page with a photo gallery, rooms, rent and a rental request form
 - Loading skeletons, empty states and error states on every data view
 - Per-page SEO metadata (title, description, canonical URL, Open Graph, Twitter card)
 - Light and dark themes
@@ -66,6 +66,7 @@ The login page has a one-click **Demo Login** button for each role. These are pu
 
 - Overview of properties, requests and bookings
 - Create, edit, publish, archive and delete properties; add, edit and remove rooms
+- Property photos: upload up to 8 per listing with previews and a progress bar, and delete them; the first is the cover
 - Incoming rental requests: approve (creates a booking) or reject
 - Bookings for owned properties and an earnings page with a chart
 

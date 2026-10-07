@@ -64,6 +64,8 @@ export type Contact = {
   phone: string | null
 }
 
+export type PropertyImage = { id: string; url: string; position: number }
+
 export type Property = {
   id: string
   ownerId: string
@@ -80,6 +82,8 @@ export type Property = {
   createdAt: DateString
   updatedAt: DateString
   owner: Contact
+  /** In display order; the first one is the cover. */
+  images: PropertyImage[]
   /** `rooms` counts available, non-deleted rooms only. */
   _count: { rooms: number }
 }

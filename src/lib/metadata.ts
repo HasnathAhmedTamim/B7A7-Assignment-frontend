@@ -7,10 +7,12 @@ export function publicMetadata({
   title,
   description,
   path,
+  image,
 }: {
   title: string
   description: string
   path: string
+  image?: string
 }): Metadata {
   const fullTitle = `${title} · ${siteConfig.name}`
   return {
@@ -23,7 +25,13 @@ export function publicMetadata({
       title: fullTitle,
       description,
       url: path,
+      ...(image ? { images: [image] } : {}),
     },
-    twitter: { card: "summary", title: fullTitle, description },
+    twitter: {
+      card: image ? "summary_large_image" : "summary",
+      title: fullTitle,
+      description,
+      ...(image ? { images: [image] } : {}),
+    },
   }
 }

@@ -1,7 +1,7 @@
 import { BathIcon, BedDoubleIcon, DoorOpenIcon, MapPinIcon } from "lucide-react"
 import Link from "next/link"
 
-import { PropertyVisual } from "@/components/shared/property-visual"
+import { PropertyCover } from "@/components/properties/property-cover"
 import { Card } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
 import { formatMoney, pluralize } from "@/lib/format"
@@ -12,7 +12,13 @@ export function PropertyCard({ property }: { property: Property }) {
   const availableRooms = property._count.rooms
   return (
     <Card className="group/property relative gap-0 py-0 transition-shadow hover:shadow-md">
-      <PropertyVisual type={property.propertyType} className="aspect-[16/9]" />
+      <PropertyCover
+        property={property}
+        alt=""
+        sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+        className="aspect-[16/9]"
+        imageClassName="transition-transform duration-300 group-hover/property:scale-[1.03]"
+      />
       <div className="flex flex-1 flex-col gap-3 p-4">
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0">

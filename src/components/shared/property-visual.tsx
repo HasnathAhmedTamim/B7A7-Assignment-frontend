@@ -13,10 +13,7 @@ const visuals: Record<PropertyType, { icon: LucideIcon; tone: string }> = {
   OTHER: { icon: WarehouseIcon, tone: "bg-chart-5/15 text-chart-5" },
 }
 
-/**
- * Listings have no photos in the backend, so each property gets a consistent
- * type-based illustration instead of a stock image.
- */
+/** Stand-in for listings without photos: a consistent type-based illustration. */
 export function PropertyVisual({
   type,
   className,

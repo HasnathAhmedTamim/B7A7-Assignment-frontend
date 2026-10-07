@@ -15,7 +15,13 @@ import {
 } from "@/lib/api/resources"
 import { queryKeys } from "@/lib/query-keys"
 import type { Paginated } from "@/types/api"
-import type { Property, PropertyDetail, PropertyStatus, RentalRequest } from "@/types/models"
+import type {
+  Property,
+  PropertyDetail,
+  PropertyImage,
+  PropertyStatus,
+  RentalRequest,
+} from "@/types/models"
 
 /** Fire-and-forget: a failed cache refresh only delays the public pages by a few minutes. */
 function refreshListings(propertyId?: string) {
@@ -119,6 +125,40 @@ export function useDeleteProperty() {
       void queryClient.invalidateQueries({ queryKey: queryKeys.properties.all })
       void queryClient.invalidateQueries({ queryKey: queryKeys.rentalRequests.all })
       refreshListings(propertyId)
+    },
+  })
+}
+
+function usePhotoMutationDefaults(propertyId: string) {
+  const queryClient = useQueryClient()
+  return (images: PropertyImage[]) => {
+    queryClient.setQueryData<PropertyDetail>(queryKeys.properties.detail(propertyId), (detail) =>
+      detail ? { ...detail, images } : detail,
+    )
+    void queryClient.invalidateQueries({ queryKey: queryKeys.properties.all })
+    refreshListings(propertyId)
+  }
+}
+
+export function useUploadPropertyImages(propertyId: string) {
+  const settle = usePhotoMutationDefaults(propertyId)
+  return useMutation({
+    mutationFn: ({ files, onProgress }: { files: File[]; onProgress: (percent: number) => void }) =>
+      propertiesApi.uploadImages(propertyId, files, onProgress),
+    onSuccess: (images, { files }) => {
+      settle(images)
+      toast.success(files.length === 1 ? "Photo added" : `${files.length} photos added`)
+    },
+  })
+}
+
+export function useDeletePropertyImage(propertyId: string) {
+  const settle = usePhotoMutationDefaults(propertyId)
+  return useMutation({
+    mutationFn: (imageId: string) => propertiesApi.removeImage(propertyId, imageId),
+    onSuccess: (images) => {
+      settle(images)
+      toast.success("Photo removed")
     },
   })
 }

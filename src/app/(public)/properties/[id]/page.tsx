@@ -13,8 +13,8 @@ import { notFound } from "next/navigation"
 import { Suspense } from "react"
 
 import { PropertyDetailSkeleton } from "@/components/properties/property-detail-skeleton"
+import { PropertyGallery } from "@/components/properties/property-gallery"
 import { RequestRoomCard, RequestThisRoomButton } from "@/components/properties/request-room-card"
-import { PropertyVisual } from "@/components/shared/property-visual"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -40,6 +40,7 @@ export async function generateMetadata({
     title: property.title,
     description: `${propertyTypeLabel[property.propertyType]} in ${property.city} for ${formatMoney(property.monthlyRent)} per month. ${property.description.slice(0, 120)}`,
     path: `/properties/${property.id}`,
+    image: property.images[0]?.url,
   })
 }
 
@@ -69,11 +70,7 @@ async function PropertyDetail({ params }: { params: PageProps<"/properties/[id]"
   return (
     <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_22rem]">
       <div className="min-w-0 space-y-8">
-        <PropertyVisual
-          type={property.propertyType}
-          size="lg"
-          className="aspect-[21/9] rounded-xl border"
-        />
+        <PropertyGallery property={property} />
 
         <div className="space-y-3">
           <div className="flex flex-wrap items-center gap-2">

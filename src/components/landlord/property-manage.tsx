@@ -50,6 +50,7 @@ import { formatAddress, formatMoney, pluralize } from "@/lib/format"
 import { propertyTypeLabel, roomTypeLabel } from "@/lib/labels"
 import type { PropertyDetail, PropertyRoom, PropertyStatus } from "@/types/models"
 
+import { PropertyPhotosCard } from "./property-photos"
 import { RoomDialog } from "./room-dialog"
 
 const statusActions: Record<PropertyStatus, Array<{ to: PropertyStatus; label: string }>> = {
@@ -321,6 +322,8 @@ export function PropertyManage({ propertyId }: { propertyId: string }) {
           </div>
         ))}
       </dl>
+
+      <PropertyPhotosCard property={p} />
 
       <RoomsCard property={p} />
 
