@@ -15,6 +15,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Skeleton } from "@/components/ui/skeleton"
+import { Spinner } from "@/components/ui/spinner"
 import { profileHref } from "@/config/nav"
 import { roleHome } from "@/config/routes"
 import { useAuth, useSignOut } from "@/hooks/use-auth"
@@ -79,8 +80,8 @@ export function UserMenu({ showDashboardLink = true }: { showDashboardLink?: boo
             signOut.mutate()
           }}
         >
-          <LogOutIcon />
-          Sign out
+          {signOut.isPending ? <Spinner /> : <LogOutIcon />}
+          {signOut.isPending ? "Signing out…" : "Sign out"}
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
