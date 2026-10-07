@@ -4,9 +4,9 @@ import { useAuthStore } from "@/stores/auth-store"
 import type { ApiFailure, ApiSuccess, Paginated } from "@/types/api"
 
 import { ApiError, fallbackMessage } from "./errors"
+import { toSearchParams, type QueryParams } from "./query-string"
 
-export type QueryValue = string | number | boolean | null | undefined
-export type QueryParams = Record<string, QueryValue>
+export type { QueryParams } from "./query-string"
 
 type RequestOptions = {
   method?: "GET" | "POST" | "PATCH" | "PUT" | "DELETE"
@@ -15,18 +15,6 @@ type RequestOptions = {
   /** Attach the access token and renew it on 401. Defaults to true. */
   auth?: boolean
   signal?: AbortSignal
-}
-
-/** Builds a query string, dropping empty values so the backend never sees `?city=`. */
-export function toSearchParams(query: QueryParams = {}): URLSearchParams {
-  const params = new URLSearchParams()
-  for (const [key, value] of Object.entries(query)) {
-    if (value === undefined || value === null) continue
-    const text = String(value).trim()
-    if (text === "") continue
-    params.set(key, text)
-  }
-  return params
 }
 
 function buildUrl(path: string, query?: QueryParams) {
@@ -60,10 +48,7 @@ async function send(path: string, options: RequestOptions, token: string | null)
 }
 
 async function parse<T>(response: Response): Promise<ApiSuccess<T>> {
-  const payload = (await response.json().catch(() => null)) as
-    | ApiSuccess<T>
-    | ApiFailure
-    | null
+  const payload = (await response.json().catch(() => null)) as ApiSuccess<T> | ApiFailure | null
 
   if (!response.ok || !payload || payload.success === false) {
     const failure = payload && payload.success === false ? payload : null
