@@ -3,11 +3,13 @@ import type { Metadata } from "next"
 import Link from "next/link"
 
 import { ContentPage } from "@/components/layout/content-page"
+import { publicMetadata } from "@/lib/metadata"
 
-export const metadata: Metadata = {
+export const metadata: Metadata = publicMetadata({
   title: "FAQ",
   description: "Answers to common questions about requests, bookings, payments and listings.",
-}
+  path: "/faq",
+})
 
 const groups = [
   {

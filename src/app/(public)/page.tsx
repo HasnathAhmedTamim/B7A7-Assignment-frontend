@@ -7,6 +7,7 @@ import {
   SearchIcon,
   SendIcon,
 } from "lucide-react"
+import type { Metadata } from "next"
 import Link from "next/link"
 import { connection } from "next/server"
 import { Suspense } from "react"
@@ -46,6 +47,22 @@ const landlordPoints = [
   { icon: InboxIcon, text: "Approve or decline requests with the tenant's details in view" },
   { icon: BadgeCheckIcon, text: "Bookings confirm automatically when the tenant pays" },
 ]
+
+export const metadata: Metadata = {
+  alternates: { canonical: "/" },
+  openGraph: {
+    type: "website",
+    siteName: siteConfig.name,
+    title: `${siteConfig.name} — ${siteConfig.tagline}`,
+    description: siteConfig.description,
+    url: "/",
+  },
+  twitter: {
+    card: "summary",
+    title: `${siteConfig.name} — ${siteConfig.tagline}`,
+    description: siteConfig.description,
+  },
+}
 
 async function LatestListings() {
   // Render per request so builds never depend on the backend being awake

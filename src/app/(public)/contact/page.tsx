@@ -6,11 +6,13 @@ import { ContactForm } from "@/components/contact-form"
 import { ContentPage } from "@/components/layout/content-page"
 import { Card, CardContent } from "@/components/ui/card"
 import { siteConfig } from "@/config/site"
+import { publicMetadata } from "@/lib/metadata"
 
-export const metadata: Metadata = {
+export const metadata: Metadata = publicMetadata({
   title: "Contact",
   description: "Get help with a request, booking, payment or listing.",
-}
+  path: "/contact",
+})
 
 export default function ContactPage() {
   return (

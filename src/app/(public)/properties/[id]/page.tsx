@@ -12,15 +12,16 @@ import Link from "next/link"
 import { notFound } from "next/navigation"
 import { Suspense } from "react"
 
+import { PropertyDetailSkeleton } from "@/components/properties/property-detail-skeleton"
 import { RequestRoomCard, RequestThisRoomButton } from "@/components/properties/request-room-card"
 import { PropertyVisual } from "@/components/shared/property-visual"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Skeleton } from "@/components/ui/skeleton"
 import { getPublicProperty } from "@/lib/api/public"
 import { formatAddress, formatDate, formatMoney, pluralize, toNumber } from "@/lib/format"
 import { propertyTypeLabel, roomTypeLabel } from "@/lib/labels"
+import { publicMetadata } from "@/lib/metadata"
 import { cn } from "@/lib/utils"
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
@@ -35,10 +36,11 @@ export async function generateMetadata({
   const { id } = await params
   const property = await loadProperty(id).catch(() => null)
   if (!property) return { title: "Home not found" }
-  return {
+  return publicMetadata({
     title: property.title,
     description: `${propertyTypeLabel[property.propertyType]} in ${property.city} for ${formatMoney(property.monthlyRent)} per month. ${property.description.slice(0, 120)}`,
-  }
+    path: `/properties/${property.id}`,
+  })
 }
 
 async function PropertyDetail({ params }: { params: PageProps<"/properties/[id]">["params"] }) {
@@ -192,25 +194,6 @@ async function PropertyDetail({ params }: { params: PageProps<"/properties/[id]"
           </CardContent>
         </Card>
       </aside>
-    </div>
-  )
-}
-
-function PropertyDetailSkeleton() {
-  return (
-    <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_22rem]" aria-busy="true">
-      <div className="space-y-6">
-        <Skeleton className="aspect-[21/9] w-full rounded-xl" />
-        <Skeleton className="h-8 w-2/3" />
-        <Skeleton className="h-4 w-1/2" />
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-          {Array.from({ length: 4 }, (_, i) => (
-            <Skeleton key={i} className="h-16" />
-          ))}
-        </div>
-        <Skeleton className="h-32 w-full" />
-      </div>
-      <Skeleton className="h-56 w-full rounded-xl" />
     </div>
   )
 }

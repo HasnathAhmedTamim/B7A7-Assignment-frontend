@@ -3,12 +3,14 @@ import Link from "next/link"
 
 import { ContentPage } from "@/components/layout/content-page"
 import { Button } from "@/components/ui/button"
+import { publicMetadata } from "@/lib/metadata"
 
-export const metadata: Metadata = {
+export const metadata: Metadata = publicMetadata({
   title: "How it works",
   description:
     "From finding a room to paying the first month: how renting works for tenants and landlords.",
-}
+  path: "/how-it-works",
+})
 
 const tenantSteps = [
   ["Create a tenant account", "Sign up in under a minute. You only need an email and password."],

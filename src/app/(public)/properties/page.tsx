@@ -19,13 +19,15 @@ import { Card } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
 import { getPublishedProperties } from "@/lib/api/public"
 import { pluralize } from "@/lib/format"
+import { publicMetadata } from "@/lib/metadata"
 import { filtersToSearchParams, parsePropertyFilters } from "@/lib/property-filters"
 
-export const metadata: Metadata = {
+export const metadata: Metadata = publicMetadata({
   title: "Browse homes",
   description:
     "Search published apartments, houses, studios and shared rooms by city, rent and size.",
-}
+  path: "/properties",
+})
 
 async function PropertyResults({
   searchParams,

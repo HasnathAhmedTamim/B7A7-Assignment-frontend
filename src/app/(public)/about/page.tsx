@@ -5,11 +5,13 @@ import Link from "next/link"
 import { ContentPage } from "@/components/layout/content-page"
 import { Button } from "@/components/ui/button"
 import { siteConfig } from "@/config/site"
+import { publicMetadata } from "@/lib/metadata"
 
-export const metadata: Metadata = {
+export const metadata: Metadata = publicMetadata({
   title: "About",
   description: `Why we built ${siteConfig.name} and how it keeps renting fair for tenants and landlords.`,
-}
+  path: "/about",
+})
 
 const principles = [
   {
