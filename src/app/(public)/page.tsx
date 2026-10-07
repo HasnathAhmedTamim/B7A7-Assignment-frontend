@@ -8,6 +8,7 @@ import {
   SendIcon,
 } from "lucide-react"
 import Link from "next/link"
+import { connection } from "next/server"
 import { Suspense } from "react"
 
 import { HeroSearch } from "@/components/properties/hero-search"
@@ -47,6 +48,8 @@ const landlordPoints = [
 ]
 
 async function LatestListings() {
+  // Render per request so builds never depend on the backend being awake
+  await connection()
   let result
   try {
     result = await getPublishedProperties({ ...DEFAULT_FILTERS, page: 1 })
