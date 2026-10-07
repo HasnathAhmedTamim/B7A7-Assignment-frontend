@@ -11,11 +11,11 @@ import { ErrorState } from "@/components/shared/error-state"
 import { StatCard, StatCardSkeleton, StatGrid } from "@/components/shared/stat-card"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { useBookings } from "@/hooks/use-rentals"
-import { monthlyTotals, paidPayments, sumAmounts, type PaidPayment } from "@/lib/earnings"
+import { monthlyTotals, paidPayments, sumAmounts, type BookingPaymentRow } from "@/lib/earnings"
 import { formatCompactMoney, formatDateTime, formatMoney, pluralize, toNumber } from "@/lib/format"
 import { gatewayLabel } from "@/lib/labels"
 
-const paymentColumns: Column<PaidPayment>[] = [
+const paymentColumns: Column<BookingPaymentRow>[] = [
   {
     id: "tenant",
     header: "Tenant",
@@ -139,7 +139,7 @@ export function LandlordEarnings() {
                   data={monthlyTotals(payments, 6, now)}
                   seriesLabel="Collected"
                   formatValue={formatCompactMoney}
-                  className="aspect-[2/1] w-full"
+                  className="aspect-auto h-64 w-full"
                 />
               </CardContent>
             </Card>

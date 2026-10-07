@@ -3,15 +3,18 @@ import { format, isSameMonth, parseISO, startOfMonth, subMonths } from "date-fns
 import { toNumber } from "@/lib/format"
 import type { Booking, BookingPayment } from "@/types/models"
 
-export type PaidPayment = BookingPayment & { booking: Booking }
+export type BookingPaymentRow = BookingPayment & { booking: Booking }
 
-/** Successful payments across bookings, newest first. Landlords see payments through bookings. */
-export function paidPayments(bookings: Booking[]): PaidPayment[] {
+/** Every payment attempt across bookings, newest first. Landlords and admins see payments through bookings. */
+export function bookingPayments(bookings: Booking[]): BookingPaymentRow[] {
   return bookings
-    .flatMap((booking) =>
-      booking.payments.filter((p) => p.status === "PAID").map((p) => ({ ...p, booking })),
-    )
+    .flatMap((booking) => booking.payments.map((p) => ({ ...p, booking })))
     .sort((a, b) => b.createdAt.localeCompare(a.createdAt))
+}
+
+/** Successful payments across bookings, newest first. */
+export function paidPayments(bookings: Booking[]): BookingPaymentRow[] {
+  return bookingPayments(bookings).filter((p) => p.status === "PAID")
 }
 
 export function sumAmounts(items: Array<{ amount: string | number }>) {
