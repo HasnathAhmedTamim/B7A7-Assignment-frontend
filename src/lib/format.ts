@@ -30,6 +30,19 @@ export function formatMoney(
   return moneyFormatter(currency).format(amount)
 }
 
+const compactMoney = new Intl.NumberFormat(siteConfig.locale, {
+  style: "currency",
+  currency: siteConfig.currency,
+  currencyDisplay: "narrowSymbol",
+  notation: "compact",
+  maximumFractionDigits: 1,
+})
+
+/** Short currency for chart axes, e.g. ৳12K. */
+export function formatCompactMoney(value: number) {
+  return compactMoney.format(value)
+}
+
 export function toNumber(value: string | number | null | undefined) {
   const n = typeof value === "string" ? Number(value) : (value ?? 0)
   return Number.isFinite(n) ? n : 0
