@@ -12,3 +12,8 @@ export function toSearchParams(query: QueryParams = {}): URLSearchParams {
   }
   return params
 }
+
+/** First value of a Next.js search param, which is an array when the key repeats. */
+export function firstParam(value: string | string[] | undefined) {
+  return Array.isArray(value) ? value[0] : value
+}

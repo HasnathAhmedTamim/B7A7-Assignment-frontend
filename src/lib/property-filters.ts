@@ -1,5 +1,6 @@
 import { z } from "zod"
 
+import { firstParam } from "@/lib/api/query-string"
 import { PROPERTY_TYPES, type PropertyType } from "@/types/models"
 
 export const SORT_OPTIONS = [
@@ -67,9 +68,7 @@ type RawParams = Record<string, string | string[] | undefined> | URLSearchParams
 
 function firstValues(params: RawParams): Record<string, string | undefined> {
   if (params instanceof URLSearchParams) return Object.fromEntries(params.entries())
-  return Object.fromEntries(
-    Object.entries(params).map(([key, value]) => [key, Array.isArray(value) ? value[0] : value]),
-  )
+  return Object.fromEntries(Object.entries(params).map(([key, value]) => [key, firstParam(value)]))
 }
 
 /** Reads listing filters from the URL, silently dropping anything invalid. */
