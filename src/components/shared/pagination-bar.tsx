@@ -11,9 +11,17 @@ type Props = {
   meta: PaginationMeta
   className?: string
 } & (
-  | { getHref: (page: number) => string; onPageChange?: never }
-  | { onPageChange: (page: number) => void; getHref?: never }
+  | { link: { pathname: string; query: Record<string, string> }; onPageChange?: never }
+  | { onPageChange: (page: number) => void; link?: never }
 )
+
+function hrefFor(link: { pathname: string; query: Record<string, string> }, page: number) {
+  const params = new URLSearchParams(link.query)
+  if (page > 1) params.set("page", String(page))
+  else params.delete("page")
+  const qs = params.toString()
+  return qs ? `${link.pathname}?${qs}` : link.pathname
+}
 
 function pageWindow(current: number, total: number): Array<number | "gap"> {
   if (total <= 7) return Array.from({ length: total }, (_, i) => i + 1)
@@ -28,14 +36,18 @@ function pageWindow(current: number, total: number): Array<number | "gap"> {
   return result
 }
 
-export function PaginationBar({ meta, className, getHref, onPageChange }: Props) {
+export function PaginationBar({ meta, className, link, onPageChange }: Props) {
   const { page, totalPages, total, limit } = meta
   if (totalPages <= 1) return null
 
   const from = (page - 1) * limit + 1
   const to = Math.min(page * limit, total)
 
-  const control = (target: number, children: React.ReactNode, props: { label: string; active?: boolean }) => {
+  const control = (
+    target: number,
+    children: React.ReactNode,
+    props: { label: string; active?: boolean },
+  ) => {
     const disabled = target < 1 || target > totalPages
     const common = {
       variant: props.active ? ("outline" as const) : ("ghost" as const),
@@ -50,12 +62,10 @@ export function PaginationBar({ meta, className, getHref, onPageChange }: Props)
         </Button>
       )
     }
-    if (getHref) {
+    if (link) {
       return (
         <Button {...common} asChild>
-          <Link href={getHref(target)} scroll={false}>
-            {children}
-          </Link>
+          <Link href={hrefFor(link, target)}>{children}</Link>
         </Button>
       )
     }
@@ -93,7 +103,9 @@ export function PaginationBar({ meta, className, getHref, onPageChange }: Props)
                 …
               </span>
             ) : (
-              <span key={item}>{control(item, item, { label: `Page ${item}`, active: item === page })}</span>
+              <span key={item}>
+                {control(item, item, { label: `Page ${item}`, active: item === page })}
+              </span>
             ),
           )}
         </span>
