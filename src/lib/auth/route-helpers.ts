@@ -24,7 +24,7 @@ export function isSameOrigin(request: NextRequest) {
     request.headers.get("host"),
     request.nextUrl.host,
   ]
-  return hosts.some((host) => host?.split(",")[0].trim() === originHost)
+  return hosts.some((host) => host?.split(",")[0]?.trim() === originHost)
 }
 
 export function forbiddenOrigin() {
