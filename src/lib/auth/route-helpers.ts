@@ -10,7 +10,21 @@ import { cookieOptions, REFRESH_COOKIE, SESSION_COOKIE, signSession } from "./se
 export function isSameOrigin(request: NextRequest) {
   const origin = request.headers.get("origin")
   if (!origin) return request.headers.get("sec-fetch-site") !== "cross-site"
-  return origin === request.nextUrl.origin
+
+  let originHost: string
+  try {
+    originHost = new URL(origin).host
+  } catch {
+    return false
+  }
+  // Behind a TLS-terminating proxy (e.g. Render) nextUrl holds the internal address,
+  // so match the public host the browser actually used.
+  const hosts = [
+    request.headers.get("x-forwarded-host"),
+    request.headers.get("host"),
+    request.nextUrl.host,
+  ]
+  return hosts.some((host) => host?.split(",")[0].trim() === originHost)
 }
 
 export function forbiddenOrigin() {
