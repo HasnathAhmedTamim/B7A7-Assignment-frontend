@@ -99,7 +99,11 @@ export function AdminOverview() {
         <StatCard
           label="Confirmed bookings"
           value={s.confirmedBookings}
-          hint={`${pluralize(awaitingPayment, "booking")} awaiting payment`}
+          hint={
+            awaitingPayment === 0
+              ? "None awaiting payment"
+              : `${pluralize(awaitingPayment, "booking")} awaiting payment`
+          }
           icon={CalendarCheckIcon}
         />
       </StatGrid>
