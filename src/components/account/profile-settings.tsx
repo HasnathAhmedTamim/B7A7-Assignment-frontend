@@ -26,7 +26,13 @@ import { roleLabel } from "@/lib/labels"
 import { queryKeys } from "@/lib/query-keys"
 import { MAX_AVATAR_BYTES, profileSchema, type ProfileValues } from "@/lib/validation/profile"
 import { useAuthStore } from "@/stores/auth-store"
-import type { User } from "@/types/models"
+import type { Role, User } from "@/types/models"
+
+const visibilityHint: Record<Role, string> = {
+  TENANT: "Landlords see your name, email and phone number when you request a room.",
+  LANDLORD: "Renters see your name on your listings.",
+  ADMIN: "Your name appears in the audit log next to your actions.",
+}
 
 function useMe() {
   const { isReady } = useAuth()
@@ -125,9 +131,7 @@ function DetailsForm({ user }: { user: User }) {
     <Card>
       <CardHeader>
         <CardTitle>Personal details</CardTitle>
-        <CardDescription>
-          Landlords see your name and phone number when you send a request.
-        </CardDescription>
+        <CardDescription>{visibilityHint[user.role]}</CardDescription>
       </CardHeader>
       <CardContent>
         <form
