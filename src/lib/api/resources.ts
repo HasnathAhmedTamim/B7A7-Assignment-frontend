@@ -119,10 +119,10 @@ export const usersApi = {
   me: () => api.get<User>("/users/me"),
   updateMe: (input: { name?: string; phone?: string | null }) =>
     api.patch<User>("/users/me", input),
-  uploadProfileImage: (file: File) => {
+  uploadProfileImage: (file: File, onUploadProgress?: (percent: number) => void) => {
     const body = new FormData()
     body.append("profileImage", file)
-    return api.patch<User>("/users/profile-image", body)
+    return api.patch<User>("/users/profile-image", body, { onUploadProgress })
   },
 }
 

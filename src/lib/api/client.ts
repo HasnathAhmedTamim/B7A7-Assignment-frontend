@@ -15,6 +15,8 @@ type RequestOptions = {
   /** Attach the access token and renew it on 401. Defaults to true. */
   auth?: boolean
   signal?: AbortSignal
+  /** Reports upload progress (0–100) for FormData bodies. */
+  onUploadProgress?: (percent: number) => void
 }
 
 function buildUrl(path: string, query?: QueryParams) {
@@ -22,7 +24,42 @@ function buildUrl(path: string, query?: QueryParams) {
   return `${env.apiBaseUrl}${path}${qs ? `?${qs}` : ""}`
 }
 
+/** fetch can't report upload progress, so progress-tracked uploads go through XMLHttpRequest. */
+function sendWithProgress(
+  path: string,
+  options: RequestOptions & { body: FormData; onUploadProgress: (percent: number) => void },
+  token: string | null,
+) {
+  return new Promise<Response>((resolve, reject) => {
+    const xhr = new XMLHttpRequest()
+    xhr.open(options.method ?? "POST", buildUrl(path, options.query))
+    xhr.setRequestHeader("Accept", "application/json")
+    if (token) xhr.setRequestHeader("Authorization", `Bearer ${token}`)
+
+    xhr.upload.onprogress = (event) => {
+      if (event.lengthComputable) {
+        options.onUploadProgress(Math.round((event.loaded / event.total) * 100))
+      }
+    }
+    xhr.onload = () => resolve(new Response(xhr.responseText, { status: xhr.status }))
+    xhr.onerror = () => reject(new ApiError(0, fallbackMessage(0)))
+    xhr.onabort = () => reject(new DOMException("Upload aborted", "AbortError"))
+    options.signal?.addEventListener("abort", () => xhr.abort(), { once: true })
+
+    options.onUploadProgress(0)
+    xhr.send(options.body)
+  })
+}
+
 async function send(path: string, options: RequestOptions, token: string | null) {
+  if (options.body instanceof FormData && options.onUploadProgress) {
+    return sendWithProgress(
+      path,
+      { ...options, body: options.body, onUploadProgress: options.onUploadProgress },
+      token,
+    )
+  }
+
   const headers = new Headers({ Accept: "application/json" })
   let body: BodyInit | undefined
   if (options.body instanceof FormData) {

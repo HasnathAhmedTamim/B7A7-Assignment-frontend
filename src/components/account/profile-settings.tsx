@@ -16,6 +16,7 @@ import { UserAvatar } from "@/components/shared/user-avatar"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { FieldGroup } from "@/components/ui/field"
+import { Progress } from "@/components/ui/progress"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Spinner } from "@/components/ui/spinner"
 import { useAuth } from "@/hooks/use-auth"
@@ -47,8 +48,10 @@ function syncSessionUser(user: User) {
 function AvatarCard({ user }: { user: User }) {
   const queryClient = useQueryClient()
   const inputRef = useRef<HTMLInputElement>(null)
+  const [preview, setPreview] = useState<string | null>(null)
+  const [progress, setProgress] = useState(0)
   const upload = useMutation({
-    mutationFn: (file: File) => usersApi.uploadProfileImage(file),
+    mutationFn: (file: File) => usersApi.uploadProfileImage(file, setProgress),
     onSuccess: (updated) => {
       queryClient.setQueryData(queryKeys.me, updated)
       toast.success("Profile photo updated")
@@ -66,23 +69,42 @@ function AvatarCard({ user }: { user: User }) {
       toast.error("That image is larger than 5 MB. Choose a smaller one.")
       return
     }
-    upload.mutate(file)
+    const previewUrl = URL.createObjectURL(file)
+    setPreview(previewUrl)
+    upload.mutate(file, {
+      onSettled: () => {
+        URL.revokeObjectURL(previewUrl)
+        setPreview(null)
+      },
+    })
   }
 
   return (
     <Card>
       <CardContent className="flex flex-col items-center gap-4 text-center sm:flex-row sm:text-left">
         <div className="relative">
-          <UserAvatar name={user.name} image={user.profileImage} className="size-20 text-lg" />
+          <UserAvatar
+            name={user.name}
+            image={preview ?? user.profileImage}
+            className="size-20 text-lg"
+          />
           {upload.isPending ? (
-            <span className="absolute inset-0 flex items-center justify-center rounded-full bg-background/70">
+            <span className="absolute inset-0 flex items-center justify-center rounded-full bg-background/60">
               <Spinner />
             </span>
           ) : null}
         </div>
-        <div className="min-w-0 flex-1 space-y-1">
+        <div className="w-full min-w-0 flex-1 space-y-1">
           <p className="truncate text-lg font-semibold">{user.name}</p>
           <p className="truncate text-sm text-muted-foreground">{user.email}</p>
+          {upload.isPending ? (
+            <div className="space-y-1 pt-1" aria-live="polite">
+              <Progress value={progress} aria-label="Photo upload progress" />
+              <p className="text-xs text-muted-foreground">
+                {progress < 100 ? `Uploading… ${progress}%` : "Processing…"}
+              </p>
+            </div>
+          ) : null}
         </div>
         <input
           ref={inputRef}
