@@ -8,6 +8,9 @@ import { useAuthStore } from "@/stores/auth-store"
 import type { SessionUser } from "@/types/models"
 
 const AUTH_CHANNEL = "nq-auth"
+const tabId = typeof crypto !== "undefined" && "randomUUID" in crypto ? crypto.randomUUID() : String(Math.random())
+
+type AuthMessage = { type: "signed-in" | "signed-out"; tabId: string }
 
 /** Seeds the auth store from the server session and restores the in-memory access token. */
 export function AuthBootstrap({ user }: { user: SessionUser | null }) {
@@ -36,10 +39,8 @@ export function AuthBootstrap({ user }: { user: SessionUser | null }) {
     let channel: BroadcastChannel | undefined
     if ("BroadcastChannel" in window) {
       channel = new BroadcastChannel(AUTH_CHANNEL)
-      channel.onmessage = (event: MessageEvent<{ type: string }>) => {
-        if (event.data.type === "signed-out" || event.data.type === "signed-in") {
-          window.location.reload()
-        }
+      channel.onmessage = (event: MessageEvent<AuthMessage>) => {
+        if (event.data.tabId !== tabId) window.location.reload()
       }
     }
     return () => {
@@ -51,9 +52,10 @@ export function AuthBootstrap({ user }: { user: SessionUser | null }) {
   return null
 }
 
-export function broadcastAuthChange(type: "signed-in" | "signed-out") {
+/** Tells other open tabs to reload so they pick up the new session state. */
+export function broadcastAuthChange(type: AuthMessage["type"]) {
   if (typeof window === "undefined" || !("BroadcastChannel" in window)) return
   const channel = new BroadcastChannel(AUTH_CHANNEL)
-  channel.postMessage({ type })
+  channel.postMessage({ type, tabId } satisfies AuthMessage)
   channel.close()
 }
