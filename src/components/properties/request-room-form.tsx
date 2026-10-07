@@ -14,7 +14,7 @@ import { SelectField, TextareaField, TextField } from "@/components/forms/form-f
 import { Button } from "@/components/ui/button"
 import { FieldGroup } from "@/components/ui/field"
 import { Spinner } from "@/components/ui/spinner"
-import { isApiError } from "@/lib/api/errors"
+import { getErrorMessage, isApiError } from "@/lib/api/errors"
 import { rentalRequestsApi } from "@/lib/api/resources"
 import { formatMoney, toDateInputValue } from "@/lib/format"
 import { applyServerErrors } from "@/lib/forms"
@@ -86,7 +86,7 @@ export function RequestRoomForm({
     },
     onError: (error) => {
       if (isApiError(error) && error.isConflict) {
-        setFormError(error.message)
+        setFormError(getErrorMessage(error))
         router.refresh()
         return
       }

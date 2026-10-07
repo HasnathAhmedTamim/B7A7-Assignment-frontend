@@ -53,6 +53,27 @@ export function fallbackMessage(status: number): string {
   )
 }
 
+const STATUS_WORDS: Record<string, string> = {
+  PENDING_PAYMENT: "awaiting payment",
+  PENDING: "pending",
+  APPROVED: "approved",
+  REJECTED: "rejected",
+  CANCELLED: "cancelled",
+  CONFIRMED: "confirmed",
+  COMPLETED: "completed",
+  PAID: "paid",
+  FAILED: "failed",
+  REFUNDED: "refunded",
+  DRAFT: "draft",
+  PUBLISHED: "published",
+  ARCHIVED: "archived",
+}
+
+/** Conflict messages quote raw enum values ("status APPROVED"); show them as words. */
+function humanizeStatuses(message: string) {
+  return message.replace(/\b[A-Z][A-Z_]{3,}\b/g, (word) => STATUS_WORDS[word] ?? word)
+}
+
 /** A user-facing message for any thrown value. */
 export function getErrorMessage(error: unknown): string {
   if (error instanceof ApiError) {
@@ -60,7 +81,8 @@ export function getErrorMessage(error: unknown): string {
     if (error.status === 0 || (error.status >= 500 && error.status !== 502)) {
       return fallbackMessage(error.status)
     }
-    return error.message || fallbackMessage(error.status)
+    if (!error.message) return fallbackMessage(error.status)
+    return error.isConflict ? humanizeStatuses(error.message) : error.message
   }
   if (error instanceof Error && error.message) {
     return error.message

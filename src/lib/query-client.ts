@@ -19,12 +19,12 @@ function makeQueryClient() {
     },
     mutationCache: new MutationCache({
       onError: (error, _variables, _context, mutation) => {
-        if (mutation.meta?.suppressErrorToast) return
-        toast.error(getErrorMessage(error))
         // A 409 means our copy is stale: pull the server's current state.
         if (isApiError(error) && error.isConflict) {
           void client.invalidateQueries()
         }
+        if (mutation.meta?.suppressErrorToast) return
+        toast.error(getErrorMessage(error))
       },
     }),
   })
