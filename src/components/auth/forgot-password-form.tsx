@@ -33,7 +33,9 @@ export function ForgotPasswordForm() {
 
   const onSubmit = form.handleSubmit((values) => request.mutate(values))
   const result = request.data
-  const resetHref = result ? `/reset-password?email=${encodeURIComponent(result.email)}` : "/reset-password"
+  const resetHref = result
+    ? `/reset-password?email=${encodeURIComponent(result.email)}`
+    : "/reset-password"
 
   return (
     <div className="space-y-6">

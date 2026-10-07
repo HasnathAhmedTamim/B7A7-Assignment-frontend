@@ -8,7 +8,10 @@ import { useAuthStore } from "@/stores/auth-store"
 import type { SessionUser } from "@/types/models"
 
 const AUTH_CHANNEL = "nq-auth"
-const tabId = typeof crypto !== "undefined" && "randomUUID" in crypto ? crypto.randomUUID() : String(Math.random())
+const tabId =
+  typeof crypto !== "undefined" && "randomUUID" in crypto
+    ? crypto.randomUUID()
+    : String(Math.random())
 
 type AuthMessage = { type: "signed-in" | "signed-out"; tabId: string }
 

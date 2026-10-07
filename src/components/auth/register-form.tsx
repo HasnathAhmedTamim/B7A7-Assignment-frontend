@@ -116,7 +116,9 @@ export function RegisterForm() {
                             <option.icon className="size-4 text-primary" aria-hidden />
                             {option.title}
                           </FieldTitle>
-                          <FieldDescription className="text-xs">{option.description}</FieldDescription>
+                          <FieldDescription className="text-xs">
+                            {option.description}
+                          </FieldDescription>
                         </FieldContent>
                         <RadioGroupItem value={option.value} id={`role-${option.value}`} />
                       </Field>

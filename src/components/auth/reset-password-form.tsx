@@ -111,7 +111,10 @@ export function ResetPasswordForm() {
 
       <p className="text-center text-sm text-muted-foreground">
         Didn&apos;t get a code?{" "}
-        <Link href="/forgot-password" className="font-medium text-primary underline-offset-4 hover:underline">
+        <Link
+          href="/forgot-password"
+          className="font-medium text-primary underline-offset-4 hover:underline"
+        >
           Send another
         </Link>
       </p>

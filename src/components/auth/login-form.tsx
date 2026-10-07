@@ -88,7 +88,10 @@ export function LoginForm() {
             name="password"
             label="Password"
             description={
-              <Link href="/forgot-password" className="underline-offset-4 hover:text-primary hover:underline">
+              <Link
+                href="/forgot-password"
+                className="underline-offset-4 hover:text-primary hover:underline"
+              >
                 Forgot your password?
               </Link>
             }
@@ -107,7 +110,10 @@ export function LoginForm() {
 
       <p className="text-center text-sm text-muted-foreground">
         New here?{" "}
-        <Link href="/register" className="font-medium text-primary underline-offset-4 hover:underline">
+        <Link
+          href="/register"
+          className="font-medium text-primary underline-offset-4 hover:underline"
+        >
           Create an account
         </Link>
       </p>

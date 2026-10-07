@@ -20,9 +20,7 @@ export async function signSession(user: SessionUser): Promise<string> {
     .sign(serverEnv.sessionSecret)
 }
 
-export async function verifySession(
-  token: string | undefined,
-): Promise<SessionUser | null> {
+export async function verifySession(token: string | undefined): Promise<SessionUser | null> {
   if (!token) return null
   try {
     const { payload } = await jwtVerify(token, serverEnv.sessionSecret, {

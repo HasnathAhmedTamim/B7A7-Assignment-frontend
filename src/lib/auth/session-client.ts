@@ -6,8 +6,7 @@ import type { SessionUser } from "@/types/models"
 export type AuthTokens = { accessToken: string; refreshToken: string }
 
 export type RefreshResult =
-  | { ok: true; accessToken: string }
-  | { ok: false; reason: "no-session" | "expired" | "network" }
+  { ok: true; accessToken: string } | { ok: false; reason: "no-session" | "expired" | "network" }
 
 type RefreshResponse = { accessToken: string; user: SessionUser }
 
@@ -61,9 +60,7 @@ export async function establishSession(tokens: AuthTokens): Promise<SessionUser>
     cache: "no-store",
   })
   const body = (await response.json().catch(() => null)) as
-    | { user: SessionUser; message?: string }
-    | { message?: string }
-    | null
+    { user: SessionUser; message?: string } | { message?: string } | null
   if (!response.ok || !body || !("user" in body)) {
     throw new Error(body?.message ?? "We couldn't sign you in. Please try again.")
   }

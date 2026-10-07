@@ -1,4 +1,4 @@
-import type { QueryParams } from "@/lib/api/client"
+import type { QueryParams } from "@/lib/api/query-string"
 
 export const queryKeys = {
   me: ["me"] as const,

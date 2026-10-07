@@ -4,13 +4,7 @@ export type Role = (typeof ROLES)[number]
 export const USER_STATUSES = ["ACTIVE", "BLOCKED"] as const
 export type UserStatus = (typeof USER_STATUSES)[number]
 
-export const PROPERTY_TYPES = [
-  "APARTMENT",
-  "HOUSE",
-  "STUDIO",
-  "SHARED",
-  "OTHER",
-] as const
+export const PROPERTY_TYPES = ["APARTMENT", "HOUSE", "STUDIO", "SHARED", "OTHER"] as const
 export type PropertyType = (typeof PROPERTY_TYPES)[number]
 
 export const PROPERTY_STATUSES = ["DRAFT", "PUBLISHED", "ARCHIVED"] as const
@@ -19,29 +13,13 @@ export type PropertyStatus = (typeof PROPERTY_STATUSES)[number]
 export const ROOM_TYPES = ["SINGLE", "DOUBLE", "SHARED", "MASTER", "OTHER"] as const
 export type RoomType = (typeof ROOM_TYPES)[number]
 
-export const RENTAL_REQUEST_STATUSES = [
-  "PENDING",
-  "APPROVED",
-  "REJECTED",
-  "CANCELLED",
-] as const
+export const RENTAL_REQUEST_STATUSES = ["PENDING", "APPROVED", "REJECTED", "CANCELLED"] as const
 export type RentalRequestStatus = (typeof RENTAL_REQUEST_STATUSES)[number]
 
-export const BOOKING_STATUSES = [
-  "PENDING_PAYMENT",
-  "CONFIRMED",
-  "CANCELLED",
-  "COMPLETED",
-] as const
+export const BOOKING_STATUSES = ["PENDING_PAYMENT", "CONFIRMED", "CANCELLED", "COMPLETED"] as const
 export type BookingStatus = (typeof BOOKING_STATUSES)[number]
 
-export const PAYMENT_STATUSES = [
-  "PENDING",
-  "PAID",
-  "FAILED",
-  "CANCELLED",
-  "REFUNDED",
-] as const
+export const PAYMENT_STATUSES = ["PENDING", "PAID", "FAILED", "CANCELLED", "REFUNDED"] as const
 export type PaymentStatus = (typeof PAYMENT_STATUSES)[number]
 
 export type PaymentGateway = "STRIPE" | "BKASH"
