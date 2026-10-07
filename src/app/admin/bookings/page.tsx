@@ -1,6 +1,8 @@
 import type { Metadata } from "next"
+import { Suspense } from "react"
 
 import { ManagedBookings } from "@/components/bookings/managed-bookings"
+import { DataTableSkeleton } from "@/components/shared/data-table"
 import { PageHeader } from "@/components/shared/page-header"
 
 export const metadata: Metadata = { title: "Bookings" }
@@ -12,7 +14,9 @@ export default function AdminBookingsPage() {
         title="Bookings"
         description="Every booking on the platform and where its payment stands."
       />
-      <ManagedBookings viewer="ADMIN" />
+      <Suspense fallback={<DataTableSkeleton columns={6} />}>
+        <ManagedBookings viewer="ADMIN" />
+      </Suspense>
     </div>
   )
 }

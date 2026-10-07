@@ -12,10 +12,12 @@ import { StatusBadge } from "@/components/shared/status-badge"
 import { StatusTabs } from "@/components/shared/status-tabs"
 import { Button } from "@/components/ui/button"
 import { useCancelRentalRequest, useMyRentalRequests } from "@/hooks/use-rentals"
+import { enumParam, useUrlParams } from "@/hooks/use-url-params"
 import { formatDate, formatMoney, formatRelative } from "@/lib/format"
 import type { RentalRequest } from "@/types/models"
 
-type Filter = "all" | "PENDING" | "APPROVED" | "closed"
+const FILTERS = ["all", "PENDING", "APPROVED", "closed"] as const
+type Filter = (typeof FILTERS)[number]
 
 const matches: Record<Filter, (request: RentalRequest) => boolean> = {
   all: () => true,
@@ -66,7 +68,8 @@ const columns: Column<RentalRequest>[] = [
 export function TenantRequests() {
   const requests = useMyRentalRequests()
   const cancel = useCancelRentalRequest()
-  const [filter, setFilter] = useState<Filter>("all")
+  const { params, set } = useUrlParams()
+  const filter = enumParam(params.get("status"), FILTERS) ?? "all"
   const [confirming, setConfirming] = useState<RentalRequest | null>(null)
 
   if (requests.isError) {
@@ -97,7 +100,7 @@ export function TenantRequests() {
       <StatusTabs
         label="Filter requests by status"
         value={filter}
-        onValueChange={setFilter}
+        onValueChange={(value) => set({ status: value === "all" ? null : value })}
         tabs={[
           { value: "all", label: "All", count: count("all") },
           { value: "PENDING", label: "Pending", count: count("PENDING") },

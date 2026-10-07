@@ -9,7 +9,6 @@ import {
   WalletIcon,
 } from "lucide-react"
 import Link from "next/link"
-import { useState } from "react"
 
 import { LazyBarChart } from "@/components/charts/lazy-bar-chart"
 import { DataTable, DataTableSkeleton, type Column } from "@/components/shared/data-table"
@@ -20,12 +19,14 @@ import { StatusBadge } from "@/components/shared/status-badge"
 import { StatusTabs } from "@/components/shared/status-tabs"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { useBookings } from "@/hooks/use-rentals"
+import { enumParam, useUrlParams } from "@/hooks/use-url-params"
 import { bookingPayments, monthlyTotals, sumAmounts, type BookingPaymentRow } from "@/lib/earnings"
 import { formatCompactMoney, formatDateTime, formatMoney, pluralize } from "@/lib/format"
 import { gatewayLabel } from "@/lib/labels"
 import type { PaymentStatus } from "@/types/models"
 
-type Filter = "all" | "PAID" | "PENDING" | "unsuccessful"
+const FILTERS = ["all", "PAID", "PENDING", "unsuccessful"] as const
+type Filter = (typeof FILTERS)[number]
 
 const matches: Record<Filter, (status: PaymentStatus) => boolean> = {
   all: () => true,
@@ -76,7 +77,8 @@ const columns: Column<BookingPaymentRow>[] = [
 
 export function AdminPayments() {
   const bookings = useBookings()
-  const [filter, setFilter] = useState<Filter>("all")
+  const { params, set } = useUrlParams()
+  const filter = enumParam(params.get("status"), FILTERS) ?? "all"
 
   if (bookings.isError) {
     return <ErrorState error={bookings.error} onRetry={() => void bookings.refetch()} />
@@ -165,7 +167,7 @@ export function AdminPayments() {
               <StatusTabs
                 label="Filter payments by status"
                 value={filter}
-                onValueChange={setFilter}
+                onValueChange={(value) => set({ status: value === "all" ? null : value })}
                 tabs={[
                   { value: "all", label: "All", count: count("all") },
                   { value: "PAID", label: "Paid", count: count("PAID") },

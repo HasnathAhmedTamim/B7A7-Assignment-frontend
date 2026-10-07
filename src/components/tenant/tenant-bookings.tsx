@@ -2,7 +2,6 @@
 
 import { CalendarCheckIcon } from "lucide-react"
 import Link from "next/link"
-import { useState } from "react"
 
 import { PayButton } from "@/components/payments/pay-button"
 import { DataTable, DataTableSkeleton, type Column } from "@/components/shared/data-table"
@@ -12,10 +11,12 @@ import { StatusBadge } from "@/components/shared/status-badge"
 import { StatusTabs } from "@/components/shared/status-tabs"
 import { Button } from "@/components/ui/button"
 import { useBookings } from "@/hooks/use-rentals"
+import { enumParam, useUrlParams } from "@/hooks/use-url-params"
 import { formatDate, formatMoney } from "@/lib/format"
 import type { Booking } from "@/types/models"
 
-type Filter = "all" | "PENDING_PAYMENT" | "CONFIRMED" | "past"
+const FILTERS = ["all", "PENDING_PAYMENT", "CONFIRMED", "past"] as const
+type Filter = (typeof FILTERS)[number]
 
 const matches: Record<Filter, (booking: Booking) => boolean> = {
   all: () => true,
@@ -58,7 +59,8 @@ const columns: Column<Booking>[] = [
 
 export function TenantBookings() {
   const bookings = useBookings()
-  const [filter, setFilter] = useState<Filter>("all")
+  const { params, set } = useUrlParams()
+  const filter = enumParam(params.get("status"), FILTERS) ?? "all"
 
   if (bookings.isError) {
     return <ErrorState error={bookings.error} onRetry={() => void bookings.refetch()} />
@@ -88,7 +90,7 @@ export function TenantBookings() {
       <StatusTabs
         label="Filter bookings by status"
         value={filter}
-        onValueChange={setFilter}
+        onValueChange={(value) => set({ status: value === "all" ? null : value })}
         tabs={[
           { value: "all", label: "All", count: count("all") },
           { value: "PENDING_PAYMENT", label: "Awaiting payment", count: count("PENDING_PAYMENT") },

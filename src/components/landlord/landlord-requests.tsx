@@ -13,10 +13,12 @@ import { StatusTabs } from "@/components/shared/status-tabs"
 import { Button } from "@/components/ui/button"
 import { useDecideRentalRequest } from "@/hooks/use-landlord"
 import { useReceivedRentalRequests } from "@/hooks/use-rentals"
+import { enumParam, useUrlParams } from "@/hooks/use-url-params"
 import { formatDate, formatMoney, formatRelative } from "@/lib/format"
 import type { RentalRequest } from "@/types/models"
 
-type Filter = "PENDING" | "APPROVED" | "closed" | "all"
+const FILTERS = ["PENDING", "APPROVED", "closed", "all"] as const
+type Filter = (typeof FILTERS)[number]
 
 const matches: Record<Filter, (r: RentalRequest) => boolean> = {
   PENDING: (r) => r.status === "PENDING",
@@ -92,7 +94,8 @@ type Pending = { request: RentalRequest; decision: "approve" | "reject" }
 export function LandlordRequests() {
   const requests = useReceivedRentalRequests()
   const decide = useDecideRentalRequest()
-  const [filter, setFilter] = useState<Filter>("PENDING")
+  const { params, set } = useUrlParams()
+  const filter = enumParam(params.get("status"), FILTERS) ?? "PENDING"
   const [confirming, setConfirming] = useState<Pending | null>(null)
 
   if (requests.isError) {
@@ -124,7 +127,7 @@ export function LandlordRequests() {
       <StatusTabs
         label="Filter requests by status"
         value={filter}
-        onValueChange={setFilter}
+        onValueChange={(value) => set({ status: value === "PENDING" ? null : value })}
         tabs={[
           { value: "PENDING", label: "Needs review", count: count("PENDING") },
           { value: "APPROVED", label: "Approved", count: count("APPROVED") },

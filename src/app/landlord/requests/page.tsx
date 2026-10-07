@@ -1,6 +1,8 @@
 import type { Metadata } from "next"
+import { Suspense } from "react"
 
 import { LandlordRequests } from "@/components/landlord/landlord-requests"
+import { DataTableSkeleton } from "@/components/shared/data-table"
 import { PageHeader } from "@/components/shared/page-header"
 
 export const metadata: Metadata = { title: "Rental requests" }
@@ -12,7 +14,9 @@ export default function LandlordRequestsPage() {
         title="Rental requests"
         description="Approving a request reserves the room and asks the tenant to pay the first month."
       />
-      <LandlordRequests />
+      <Suspense fallback={<DataTableSkeleton columns={6} />}>
+        <LandlordRequests />
+      </Suspense>
     </div>
   )
 }

@@ -1,5 +1,7 @@
 import type { Metadata } from "next"
+import { Suspense } from "react"
 
+import { DataTableSkeleton } from "@/components/shared/data-table"
 import { PageHeader } from "@/components/shared/page-header"
 import { TenantBookings } from "@/components/tenant/tenant-bookings"
 
@@ -12,7 +14,9 @@ export default function TenantBookingsPage() {
         title="My bookings"
         description="Approved requests become bookings. Pay the first month to confirm one."
       />
-      <TenantBookings />
+      <Suspense fallback={<DataTableSkeleton columns={4} />}>
+        <TenantBookings />
+      </Suspense>
     </div>
   )
 }

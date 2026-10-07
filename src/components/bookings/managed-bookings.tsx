@@ -2,7 +2,6 @@
 
 import { CalendarCheckIcon } from "lucide-react"
 import Link from "next/link"
-import { useState } from "react"
 
 import { DataTable, DataTableSkeleton, type Column } from "@/components/shared/data-table"
 import { EmptyState } from "@/components/shared/empty-state"
@@ -12,11 +11,13 @@ import { StatusBadge } from "@/components/shared/status-badge"
 import { StatusTabs } from "@/components/shared/status-tabs"
 import { Button } from "@/components/ui/button"
 import { useBookings } from "@/hooks/use-rentals"
+import { enumParam, useUrlParams } from "@/hooks/use-url-params"
 import { formatDate, formatMoney } from "@/lib/format"
 import type { Booking } from "@/types/models"
 
 type Viewer = "LANDLORD" | "ADMIN"
-type Filter = "all" | "PENDING_PAYMENT" | "CONFIRMED" | "past"
+const FILTERS = ["all", "PENDING_PAYMENT", "CONFIRMED", "past"] as const
+type Filter = (typeof FILTERS)[number]
 
 const matches: Record<Filter, (b: Booking) => boolean> = {
   all: () => true,
@@ -98,8 +99,9 @@ function columnsFor(viewer: Viewer): Column<Booking>[] {
 
 export function ManagedBookings({ viewer }: { viewer: Viewer }) {
   const bookings = useBookings()
-  const [filter, setFilter] = useState<Filter>("all")
-  const [search, setSearch] = useState("")
+  const { params, set } = useUrlParams()
+  const filter = enumParam(params.get("status"), FILTERS) ?? "all"
+  const search = params.get("search")?.trim() ?? ""
 
   if (bookings.isError) {
     return <ErrorState error={bookings.error} onRetry={() => void bookings.refetch()} />
@@ -144,7 +146,7 @@ export function ManagedBookings({ viewer }: { viewer: Viewer }) {
         <StatusTabs
           label="Filter bookings by status"
           value={filter}
-          onValueChange={setFilter}
+          onValueChange={(value) => set({ status: value === "all" ? null : value })}
           tabs={[
             { value: "all", label: "All", count: count("all") },
             {
@@ -158,7 +160,7 @@ export function ManagedBookings({ viewer }: { viewer: Viewer }) {
         />
         <SearchInput
           value={search}
-          onChange={setSearch}
+          onChange={(value) => set({ search: value })}
           placeholder="Search tenant, home or room"
           label="Search bookings"
           className="lg:w-72"
