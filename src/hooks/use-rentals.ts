@@ -3,6 +3,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { toast } from "sonner"
 
+import { refreshPublicListings } from "@/app/actions/listings"
 import { useAuth } from "@/hooks/use-auth"
 import { bookingsApi, paymentsApi, rentalRequestsApi } from "@/lib/api/resources"
 import { queryKeys } from "@/lib/query-keys"
@@ -117,6 +118,7 @@ export function useCancelBooking() {
     onSuccess: (booking) => {
       queryClient.setQueryData(queryKeys.bookings.detail(booking.id), booking)
       toast.success("Booking cancelled. The room is open to other renters again.")
+      void refreshPublicListings(booking.property.id).catch(() => undefined)
     },
     onSettled: () =>
       Promise.all([
