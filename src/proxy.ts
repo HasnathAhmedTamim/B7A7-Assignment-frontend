@@ -7,7 +7,7 @@ import {
   matchesPrefix,
   roleHome,
 } from "@/config/routes"
-import { SESSION_COOKIE, verifySession } from "@/lib/auth/session"
+import { readSession } from "@/lib/auth/session"
 
 /**
  * Optimistic route guard based on the signed session cookie.
@@ -15,7 +15,7 @@ import { SESSION_COOKIE, verifySession } from "@/lib/auth/session"
  */
 export async function proxy(request: NextRequest) {
   const { pathname, search } = request.nextUrl
-  const session = await verifySession(request.cookies.get(SESSION_COOKIE)?.value)
+  const session = await readSession(request.cookies)
 
   if (isProtectedPath(pathname)) {
     if (!session) {

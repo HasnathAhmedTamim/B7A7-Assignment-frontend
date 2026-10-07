@@ -47,6 +47,12 @@ export async function verifySession(token: string | undefined): Promise<SessionU
   }
 }
 
+/** The session only counts while its refresh cookie exists; without it the access token can't be renewed. */
+export function readSession(cookies: { get(name: string): { value: string } | undefined }) {
+  if (!cookies.get(REFRESH_COOKIE)) return Promise.resolve(null)
+  return verifySession(cookies.get(SESSION_COOKIE)?.value)
+}
+
 export const cookieOptions = {
   httpOnly: true,
   sameSite: "lax" as const,

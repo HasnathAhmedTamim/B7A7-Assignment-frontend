@@ -27,8 +27,10 @@ export function AuthBootstrap({ user }: { user: SessionUser | null }) {
 
     store.setUser(user)
     void refreshAccessToken().then((result) => {
-      if (!result.ok && result.reason === "expired") handleSessionExpired("session-expired")
-      if (!result.ok && result.reason === "network") {
+      if (result.ok) return
+      // The server saw a session, so a missing or rejected refresh cookie means it ended elsewhere.
+      if (result.reason !== "network") handleSessionExpired("session-expired")
+      else {
         useAuthStore.setState({ status: "unauthenticated" })
         toast.error("We couldn't restore your session. Check your connection and reload.")
       }
