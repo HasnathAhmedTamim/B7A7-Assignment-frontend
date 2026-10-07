@@ -17,12 +17,15 @@ export function EmptyState({
   title,
   description,
   action,
+  headingLevel,
   className,
 }: {
   icon?: LucideIcon
   title: string
   description?: ReactNode
   action?: ReactNode
+  /** Set when the empty state is the main content of a page, so it carries the page heading. */
+  headingLevel?: 1 | 2
   className?: string
 }) {
   return (
@@ -31,7 +34,9 @@ export function EmptyState({
         <EmptyMedia variant="icon">
           <Icon />
         </EmptyMedia>
-        <EmptyTitle>{title}</EmptyTitle>
+        <EmptyTitle {...(headingLevel ? { role: "heading", "aria-level": headingLevel } : {})}>
+          {title}
+        </EmptyTitle>
         {description ? <EmptyDescription>{description}</EmptyDescription> : null}
       </EmptyHeader>
       {action ? <EmptyContent>{action}</EmptyContent> : null}

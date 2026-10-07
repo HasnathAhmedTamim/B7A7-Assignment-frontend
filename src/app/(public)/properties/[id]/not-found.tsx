@@ -9,6 +9,7 @@ export default function PropertyNotFound() {
     <div className="mx-auto w-full max-w-2xl px-4 py-20">
       <EmptyState
         icon={HomeIcon}
+        headingLevel={1}
         title="This home isn't available"
         description="It may have been rented out, unpublished or removed by the landlord."
         action={
