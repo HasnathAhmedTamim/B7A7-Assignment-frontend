@@ -6,12 +6,6 @@ export const roleHome: Record<Role, string> = {
   TENANT: "/dashboard",
 }
 
-export const roleLabel: Record<Role, string> = {
-  ADMIN: "Admin",
-  LANDLORD: "Landlord",
-  TENANT: "Tenant",
-}
-
 /** Route prefixes and the roles allowed to open them. Checked in `proxy.ts`. */
 export const protectedRoutes: ReadonlyArray<{ prefix: string; roles: readonly Role[] }> = [
   { prefix: "/admin", roles: ["ADMIN"] },
