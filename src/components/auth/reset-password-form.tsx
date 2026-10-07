@@ -13,6 +13,7 @@ import { TextField } from "@/components/forms/form-fields"
 import { Button } from "@/components/ui/button"
 import { FieldGroup } from "@/components/ui/field"
 import { Spinner } from "@/components/ui/spinner"
+import { useResetOnHide } from "@/hooks/use-reset-on-hide"
 import { authApi } from "@/lib/api/auth"
 import { applyServerErrors } from "@/lib/forms"
 import { resetPasswordSchema, type ResetPasswordValues } from "@/lib/validation/auth"
@@ -53,6 +54,12 @@ export function ResetPasswordForm() {
     reset.mutate(values)
   })
   const busy = reset.isPending || reset.isSuccess
+
+  useResetOnHide(() => {
+    reset.reset()
+    form.reset()
+    setFormError(null)
+  })
 
   return (
     <div className="space-y-6">

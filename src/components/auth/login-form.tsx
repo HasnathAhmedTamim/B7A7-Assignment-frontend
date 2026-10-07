@@ -15,6 +15,7 @@ import { FieldGroup } from "@/components/ui/field"
 import { Spinner } from "@/components/ui/spinner"
 import type { DemoAccount } from "@/config/demo-accounts"
 import { useSignIn } from "@/hooks/use-auth"
+import { useResetOnHide } from "@/hooks/use-reset-on-hide"
 import { getErrorMessage, isApiError } from "@/lib/api/errors"
 import { loginSchema, type LoginValues } from "@/lib/validation/auth"
 
@@ -54,6 +55,12 @@ export function LoginForm() {
   }
 
   const busy = signIn.isPending || signIn.isSuccess
+
+  useResetOnHide(() => {
+    signIn.reset()
+    form.reset()
+    setDemoEmail(null)
+  })
 
   return (
     <div className="space-y-6">
