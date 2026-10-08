@@ -15,7 +15,7 @@ A Next.js app where tenants find rooms, send rental requests and pay rent with S
 | **Backend repository**  | [HasnathAhmedTamim/B7A6-Assignment-backend](https://github.com/HasnathAhmedTamim/B7A6-Assignment-backend)   |
 | **Live frontend**       | [https://b7a7-assignment-frontend.onrender.com](https://b7a7-assignment-frontend.onrender.com)              |
 | **Live API**            | [https://b7a6-assignment-backend.onrender.com/api/v1](https://b7a6-assignment-backend.onrender.com/health)  |
-| **API documentation**   | [Postman Documenter](https://documenter.getpostman.com/view/31892953/2sBYAxP9Sg)                            |
+| **API documentation**   | [Postman Documenter](https://documenter.getpostman.com/view/31892953/2sBYHQ12bk)                            |
 | **Demo video**          | _Add the Google Drive link here_                                                                            |
 
 > Both services run on Render's free plan and sleep after 15 minutes idle. The first visit can take 30–60 seconds while the API wakes up.
