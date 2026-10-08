@@ -52,9 +52,11 @@ export function ForgotPasswordForm() {
             <MailCheckIcon />
             <AlertTitle>Check your inbox</AlertTitle>
             <AlertDescription>
-              {result.emailSent
-                ? `We sent a code to ${result.deliveredTo ?? result.email}. It expires in ${Math.round(result.expiresInSeconds / 60)} minutes.`
-                : "We couldn't deliver the email, so a development code was issued instead."}
+              {!result.emailSent
+                ? "We couldn't deliver the email, so a development code was issued instead."
+                : result.redirected
+                  ? `Email is in demo mode, so the code for ${result.email} went to the site owner's inbox. It expires in ${Math.round(result.expiresInSeconds / 60)} minutes.`
+                  : `We sent a code to ${result.deliveredTo ?? result.email}. It expires in ${Math.round(result.expiresInSeconds / 60)} minutes.`}
               {result.otp ? (
                 <span className="mt-2 block font-mono text-base tracking-widest text-foreground">
                   {result.otp}
