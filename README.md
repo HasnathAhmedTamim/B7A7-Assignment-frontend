@@ -8,15 +8,15 @@ A Next.js app where tenants find rooms, send rental requests and pay rent with S
 
 ## Submission
 
-| Field                   | Link / value                                                                                                |
-| ----------------------- | ----------------------------------------------------------------------------------------------------------- |
-| **Project**             | NestQuarter — Housing & Roommate Platform (idea #6)                                                         |
-| **Frontend repository** | [HasnathAhmedTamim/B7A7-Assignment-frontend](https://github.com/HasnathAhmedTamim/B7A7-Assignment-frontend) |
-| **Backend repository**  | [HasnathAhmedTamim/B7A6-Assignment-backend](https://github.com/HasnathAhmedTamim/B7A6-Assignment-backend)   |
-| **Live frontend**       | [https://b7a7-assignment-frontend.onrender.com](https://b7a7-assignment-frontend.onrender.com)              |
-| **Live API**            | [https://b7a6-assignment-backend.onrender.com/api/v1](https://b7a6-assignment-backend.onrender.com/health)  |
-| **API documentation**   | [Postman Documenter](https://documenter.getpostman.com/view/31892953/2sBYHQ12bk)                            |
-| **Demo video**          | _Add the Google Drive link here_                                                                            |
+| Field                   | Link / value                                                                                                    |
+| ----------------------- | --------------------------------------------------------------------------------------------------------------- |
+| **Project**             | NestQuarter — Housing & Roommate Platform (idea #6)                                                             |
+| **Frontend repository** | [HasnathAhmedTamim/B7A7-Assignment-frontend](https://github.com/HasnathAhmedTamim/B7A7-Assignment-frontend)     |
+| **Backend repository**  | [HasnathAhmedTamim/B7A6-Assignment-backend](https://github.com/HasnathAhmedTamim/B7A6-Assignment-backend)       |
+| **Live frontend**       | [https://b7a7-assignment-frontend.onrender.com](https://b7a7-assignment-frontend.onrender.com)                  |
+| **Live API**            | [https://b7a6-assignment-backend.onrender.com/api/v1](https://b7a6-assignment-backend.onrender.com/health)      |
+| **API documentation**   | [Postman Documenter](https://documenter.getpostman.com/view/31892953/2sBYHQ12bk)                                |
+| **Demo video**          | [Google Drive (asignment7)](https://drive.google.com/file/d/1Xff-t1ZujX1SWsdme37ToSMId9ShrqKZ/view?usp=sharing) |
 
 > Both services run on Render's free plan and sleep after 15 minutes idle. The first visit can take 30–60 seconds while the API wakes up.
 
