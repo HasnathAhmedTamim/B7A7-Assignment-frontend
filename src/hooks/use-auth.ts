@@ -53,6 +53,16 @@ export function useSignIn(next: string | null) {
   })
 }
 
+export function useGoogleSignIn(next: string | null) {
+  const complete = useCompleteSignIn()
+  return useMutation({
+    mutationFn: async (input: { idToken: string; role?: RegisterInput["role"] }) =>
+      complete(await authApi.google(input), next),
+    onSuccess: (user) => toast.success(`Welcome, ${user.name.split(" ")[0]}`),
+    meta: { suppressErrorToast: true },
+  })
+}
+
 export function useRegister() {
   const complete = useCompleteSignIn()
   return useMutation({

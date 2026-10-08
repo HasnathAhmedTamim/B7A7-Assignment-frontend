@@ -10,4 +10,6 @@ export const env = {
   apiBaseUrl: required("NEXT_PUBLIC_API_BASE_URL", process.env.NEXT_PUBLIC_API_BASE_URL),
   siteUrl: (process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000").replace(/\/+$/, ""),
   enableDemoLogin: process.env.NEXT_PUBLIC_ENABLE_DEMO_LOGIN !== "false",
+  /** Google OAuth web client ID; the Google button is hidden when it is not set. */
+  googleClientId: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID ?? "",
 } as const

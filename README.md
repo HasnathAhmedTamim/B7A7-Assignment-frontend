@@ -50,6 +50,7 @@ The login page has a one-click **Demo Login** button for each role. These are pu
 ### Authentication
 
 - Email/password registration (tenant or landlord) and login
+- Sign in or sign up with Google (Google Identity Services); new Google accounts get the role picked on the sign-up page
 - Forgot / reset password with an emailed OTP
 - One-click demo login for all three roles
 - Role-based route protection in `src/proxy.ts`; unauthorized users are sent to `/login` or `/unauthorized`
@@ -165,6 +166,7 @@ Open [http://localhost:3000](http://localhost:3000).
 | `NEXT_PUBLIC_API_BASE_URL`      | Backend base URL including `/api/v1`                           |
 | `NEXT_PUBLIC_SITE_URL`          | Public URL of this frontend (metadata and absolute links)      |
 | `NEXT_PUBLIC_ENABLE_DEMO_LOGIN` | `true` to show the one-click demo login buttons                |
+| `NEXT_PUBLIC_GOOGLE_CLIENT_ID`  | Google OAuth web client ID; empty hides the Google button      |
 | `API_BASE_URL`                  | Optional server-only override of the backend URL               |
 | `SESSION_SECRET`                | At least 32 random characters, used to sign the session cookie |
 

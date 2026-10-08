@@ -29,6 +29,10 @@ export const authApi = {
   register: (input: RegisterInput) =>
     api.post<AuthResponse>("/auth/register", input, { auth: false }),
 
+  /** Signs in with a Google ID token; `role` only applies when this creates a new account. */
+  google: (input: { idToken: string; role?: RegisterInput["role"] }) =>
+    api.post<AuthResponse>("/auth/google", input, { auth: false }),
+
   forgotPassword: (email: string) =>
     api.post<ForgotPasswordResponse>("/auth/forgot-password", { email }, { auth: false }),
 

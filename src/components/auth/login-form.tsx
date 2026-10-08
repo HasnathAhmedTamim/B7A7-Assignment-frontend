@@ -14,11 +14,12 @@ import { Button } from "@/components/ui/button"
 import { FieldGroup } from "@/components/ui/field"
 import { Spinner } from "@/components/ui/spinner"
 import type { DemoAccount } from "@/config/demo-accounts"
-import { useSignIn } from "@/hooks/use-auth"
+import { useGoogleSignIn, useSignIn } from "@/hooks/use-auth"
 import { getErrorMessage, isApiError } from "@/lib/api/errors"
 import { loginSchema, type LoginValues } from "@/lib/validation/auth"
 
 import { DemoLogin } from "./demo-login"
+import { GoogleSignInButton } from "./google-sign-in-button"
 
 const reasonMessages: Record<string, string> = {
   "session-expired": "Your session has expired. Please sign in again.",
@@ -41,19 +42,33 @@ export function LoginForm() {
     defaultValues: { email: "", password: "" },
   })
   const signIn = useSignIn(next)
+  const google = useGoogleSignIn(next)
 
   const onSubmit = form.handleSubmit((values) => {
     setDemoEmail(null)
+    google.reset()
     signIn.mutate(values)
   })
 
   const onDemo = (account: DemoAccount) => {
     setDemoEmail(account.email)
+    google.reset()
     form.reset({ email: account.email, password: account.password })
     signIn.mutate({ email: account.email, password: account.password })
   }
 
-  const busy = signIn.isPending || signIn.isSuccess
+  const onGoogle = (idToken: string) => {
+    setDemoEmail(null)
+    signIn.reset()
+    google.mutate({ idToken })
+  }
+
+  const busy = signIn.isPending || signIn.isSuccess || google.isPending || google.isSuccess
+  const error = signIn.isError
+    ? loginErrorMessage(signIn.error)
+    : google.isError
+      ? getErrorMessage(google.error)
+      : null
 
   return (
     <div className="space-y-6">
@@ -72,7 +87,7 @@ export function LoginForm() {
       ) : null}
 
       <form onSubmit={onSubmit} noValidate className="space-y-5">
-        <FormAlert message={signIn.isError ? loginErrorMessage(signIn.error) : null} />
+        <FormAlert message={error} />
         <FieldGroup>
           <TextField
             control={form.control}
@@ -101,10 +116,14 @@ export function LoginForm() {
           />
         </FieldGroup>
         <Button type="submit" className="w-full" size="lg" disabled={busy}>
-          {busy && !demoEmail ? <Spinner data-icon="inline-start" /> : null}
+          {busy && !demoEmail && !google.isPending && !google.isSuccess ? (
+            <Spinner data-icon="inline-start" />
+          ) : null}
           Sign in
         </Button>
       </form>
+
+      <GoogleSignInButton text="signin_with" disabled={busy} onCredential={onGoogle} />
 
       <DemoLogin onSelect={onDemo} pendingEmail={busy ? demoEmail : null} disabled={busy} />
 

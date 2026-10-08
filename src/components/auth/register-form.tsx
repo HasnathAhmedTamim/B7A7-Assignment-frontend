@@ -22,10 +22,12 @@ import {
 } from "@/components/ui/field"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Spinner } from "@/components/ui/spinner"
-import { useRegister } from "@/hooks/use-auth"
-import { isApiError } from "@/lib/api/errors"
+import { useGoogleSignIn, useRegister } from "@/hooks/use-auth"
+import { getErrorMessage, isApiError } from "@/lib/api/errors"
 import { applyServerErrors } from "@/lib/forms"
 import { registerSchema, type RegisterValues } from "@/lib/validation/auth"
+
+import { GoogleSignInButton } from "./google-sign-in-button"
 
 const roleOptions = [
   {
@@ -56,9 +58,19 @@ export function RegisterForm() {
     },
   })
   const register = useRegister()
+  const google = useGoogleSignIn(null)
+
+  const onGoogle = (idToken: string) => {
+    setFormError(null)
+    google.mutate(
+      { idToken, role: form.getValues("role") },
+      { onError: (error) => setFormError(getErrorMessage(error)) },
+    )
+  }
 
   const onSubmit = form.handleSubmit((values) => {
     setFormError(null)
+    google.reset()
     register.mutate(
       {
         name: values.name,
@@ -83,7 +95,8 @@ export function RegisterForm() {
     )
   })
 
-  const busy = register.isPending || register.isSuccess
+  const googleBusy = google.isPending || google.isSuccess
+  const busy = register.isPending || register.isSuccess || googleBusy
 
   return (
     <div className="space-y-6">
@@ -173,10 +186,12 @@ export function RegisterForm() {
           />
         </FieldGroup>
         <Button type="submit" className="w-full" size="lg" disabled={busy}>
-          {busy ? <Spinner data-icon="inline-start" /> : null}
+          {busy && !googleBusy ? <Spinner data-icon="inline-start" /> : null}
           Create account
         </Button>
       </form>
+
+      <GoogleSignInButton text="signup_with" disabled={busy} onCredential={onGoogle} />
 
       <p className="text-center text-sm text-muted-foreground">
         Already have an account?{" "}
