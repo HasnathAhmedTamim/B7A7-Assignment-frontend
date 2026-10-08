@@ -17,7 +17,7 @@ export type ForgotPasswordResponse = {
   expiresInSeconds: number
   emailSent: boolean
   deliveredTo?: string
-  /** The backend's demo email mode sent the code to the site owner's inbox instead. */
+  /** Demo email mode sent the code to `deliveredTo` instead of the account's own email. */
   redirected?: boolean
   note?: string
   /** Only present when the backend runs with ALLOW_OTP_IN_RESPONSE=true (development). */
